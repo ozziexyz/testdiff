@@ -26,8 +26,11 @@ public class Robot extends TimedRobot {
     m_rightBackMotor.restoreFactoryDefaults();
     m_leftFrontMotor.restoreFactoryDefaults();
     m_rightFrontMotor.restoreFactoryDefaults();
+
     
     m_leftBackMotor.follow(m_leftFrontMotor);
+    m_rightBackMotor.follow(m_rightFrontMotor);
+    
     m_rightBackMotor.follow(m_rightFrontMotor);
     
     m_rightFrontMotor.setInverted(true);
@@ -38,6 +41,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    m_robotDrive.tankDrive(-m_controller.getLeftY(), -m_controller.getRightY());
+    // m_robotDrive.tankDrive(-m_controller.getLeftY(), -m_controller.getRightY());
+    m_rightFrontMotor.set(0.2);
+    m_leftFrontMotor.set(0.2);
+    m_rightBackMotor.set(0.2);
+    m_leftBackMotor.set(0.2);
   }
 }

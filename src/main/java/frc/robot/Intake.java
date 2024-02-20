@@ -1,6 +1,5 @@
 package frc.robot;
 
-import com.fasterxml.jackson.databind.jsontype.impl.SubTypeValidator;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 

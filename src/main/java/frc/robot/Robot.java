@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import com.revrobotics.CANSparkMax;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;

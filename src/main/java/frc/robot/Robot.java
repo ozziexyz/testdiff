@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class Robot extends TimedRobot {
@@ -33,8 +34,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-      double leftY = MathUtil.clamp(m_controller.getLeftY(), driveInputMin, driveInputMax);
-      double rightY = MathUtil.clamp(m_controller.getRightY(), driveInputMin, driveInputMax);
-      m_drive.tankDrive(leftY, rightY);
+    CommandScheduler.getInstance().run(); // start command scheduler
+    double leftY = MathUtil.clamp(m_controller.getLeftY(), driveInputMin, driveInputMax);
+    double rightY = MathUtil.clamp(m_controller.getRightY(), driveInputMin, driveInputMax);
+    m_drive.tankDrive(leftY, rightY);
   }
 }

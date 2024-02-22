@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,6 +14,7 @@ public class Pivot extends SubsystemBase {
 
     public Pivot() {
         m_motor.setSmartCurrentLimit(40);
+        m_motor.setIdleMode(IdleMode.kBrake);
         m_motor.burnFlash();
     }
 

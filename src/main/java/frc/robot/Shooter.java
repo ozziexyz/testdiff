@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
@@ -15,6 +16,8 @@ public class Shooter extends SubsystemBase {
     public Shooter() {
         m_leftMotor.setSmartCurrentLimit(40);
         m_rightMotor.setSmartCurrentLimit(40);
+        m_leftMotor.setIdleMode(IdleMode.kBrake);
+        m_rightMotor.setIdleMode(IdleMode.kBrake);
         m_leftMotor.setInverted(true);
         m_leftMotor.burnFlash();
         m_rightMotor.burnFlash();

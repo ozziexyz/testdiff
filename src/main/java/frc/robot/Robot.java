@@ -8,27 +8,29 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.OI;
 
 public class Robot extends TimedRobot {
-  private CommandXboxController m_controller = new CommandXboxController(0);
-
   private Drive m_drive = new Drive();
   private Pivot m_pivot = new Pivot();
   private Intake m_intake = new Intake();
   private Shooter m_shooter = new Shooter();
   
-  private final double driveInputMin = -0.5;
-  private final double driveInputMax = 0.5;
-
   public void configureButtonBindings() {
     SmartDashboard.putBoolean("Button bindings", true);
-    m_controller.leftBumper().whileTrue(m_pivot.rotateBackward());
-    m_controller.rightBumper().whileTrue(m_pivot.rotateForward());
-    m_controller.leftTrigger().onTrue(m_shooter.runCommand(0.5));
-    m_controller.a().onTrue(m_shooter.runCommand(0));
-    m_controller.rightTrigger().onTrue(m_intake.runCommand(0.9));
-    m_controller.b().onTrue(m_intake.runCommand(0));
+
+    OI.controller.leftTrigger(0.3).onTrue(m_pivot.rotateCommand(Constants.pivotSpeed));
+    OI.controller.leftTrigger(0.3).onFalse(m_pivot.rotateCommand(0));
+    OI.controller.rightTrigger(0.3).onTrue(m_pivot.rotateCommand(-Constants.pivotSpeed));
+    OI.controller.rightTrigger(0.3).onFalse(m_pivot.rotateCommand(0));
+
+    OI.controller.leftBumper().onTrue(m_shooter.runCommand(Constants.shooterSpeed));
+    OI.controller.leftBumper().onFalse(m_shooter.runCommand(0));
+    OI.controller.rightBumper().onTrue(m_intake.runCommand(Constants.intakeSpeed));
+    OI.controller.rightBumper().onFalse(m_intake.runCommand(0));
+
+    OI.controller.a().onTrue(m_intake.runCommand(-Constants.intakeSpeed));
+    OI.controller.a().onFalse(m_intake.runCommand(0));
   }
 
   @Override
@@ -38,13 +40,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    double leftY = MathUtil.clamp(m_controller.getLeftY(), driveInputMin, driveInputMax);
-    double rightY = MathUtil.clamp(m_controller.getRightY(), driveInputMin, driveInputMax);
+    double leftY = MathUtil.clamp(OI.controller.getLeftY(), Constants.driveInputMin, Constants.driveInputMax);
+    double rightY = MathUtil.clamp(OI.controller.getRightY(), Constants.driveInputMin, Constants.driveInputMax);
     m_drive.tankDrive(leftY, rightY);
   }
 
   @Override
   public void robotPeriodic() {
-    CommandScheduler.getInstance().run(); // start command scheduler
+    CommandScheduler.getInstance().run();
   }
 }

@@ -6,7 +6,7 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Drive extends SubsystemBase{
+public class Drive extends SubsystemBase {
     private final CANSparkMax m_leftFrontMotor = new CANSparkMax(1, MotorType.kBrushless);
     private final CANSparkMax m_rightFrontMotor = new CANSparkMax(2, MotorType.kBrushless);
     private final CANSparkMax m_leftBackMotor = new CANSparkMax(3, MotorType.kBrushless);

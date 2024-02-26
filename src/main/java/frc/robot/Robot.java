@@ -7,7 +7,10 @@ package frc.robot;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.OI;
 
 public class Robot extends TimedRobot {
@@ -15,6 +18,10 @@ public class Robot extends TimedRobot {
   private Pivot m_pivot = new Pivot();
   private Intake m_intake = new Intake();
   private Shooter m_shooter = new Shooter();
+
+  private Command m_auto = new RunCommand(
+    () -> m_drive.tankDrive(-Constants.driveInputMax, -Constants.driveInputMax)
+  ).withTimeout(2);
   
   public void configureButtonBindings() {
     SmartDashboard.putBoolean("Button bindings", true);
@@ -43,6 +50,15 @@ public class Robot extends TimedRobot {
     double leftY = MathUtil.clamp(OI.controller.getLeftY(), Constants.driveInputMin, Constants.driveInputMax);
     double rightY = MathUtil.clamp(OI.controller.getRightY(), Constants.driveInputMin, Constants.driveInputMax);
     m_drive.tankDrive(leftY, rightY);
+  }
+
+  @Override
+  public void autonomousInit() {
+    m_auto.schedule();
+  }
+
+  @Override
+  public void autonomousPeriodic() {
   }
 
   @Override

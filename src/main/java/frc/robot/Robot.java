@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.OI;
 
@@ -20,24 +19,21 @@ public class Robot extends TimedRobot {
   private Shooter m_shooter = new Shooter();
 
   private Command m_auto = new RunCommand(
-    () -> m_drive.tankDrive(-Constants.driveInputMax, -Constants.driveInputMax)
+    () -> m_drive.tankDrive(-OI.driveInputMax, -OI.driveInputMax)
   ).withTimeout(2);
   
   public void configureButtonBindings() {
     SmartDashboard.putBoolean("Button bindings", true);
 
-    OI.controller.leftTrigger(0.3).onTrue(m_pivot.rotateCommand(Constants.pivotSpeed));
-    OI.controller.leftTrigger(0.3).onFalse(m_pivot.rotateCommand(0));
-    OI.controller.rightTrigger(0.3).onTrue(m_pivot.rotateCommand(-Constants.pivotSpeed));
-    OI.controller.rightTrigger(0.3).onFalse(m_pivot.rotateCommand(0));
+    OI.opController.leftTrigger(0.3).whileTrue(m_pivot.rotateCommand(Constants.pivotSpeed));
+    OI.opController.rightTrigger(0.3).whileTrue(m_pivot.rotateCommand(-Constants.pivotSpeed));
 
-    OI.controller.leftBumper().onTrue(m_shooter.runCommand(Constants.shooterSpeed));
-    OI.controller.leftBumper().onFalse(m_shooter.runCommand(0));
-    OI.controller.rightBumper().onTrue(m_intake.runCommand(Constants.intakeSpeed));
-    OI.controller.rightBumper().onFalse(m_intake.runCommand(0));
 
-    OI.controller.a().onTrue(m_intake.runCommand(-Constants.intakeSpeed));
-    OI.controller.a().onFalse(m_intake.runCommand(0));
+    OI.opController.leftBumper().whileTrue(m_shooter.runCommand(Constants.shooterSpeed));
+
+    OI.opController.rightBumper().whileTrue(m_intake.runCommand(Constants.intakeSpeed));
+
+    OI.opController.a().whileTrue(m_intake.runCommand(-Constants.intakeSpeed));
   }
 
   @Override
@@ -47,8 +43,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    double leftY = MathUtil.clamp(OI.controller.getLeftY(), Constants.driveInputMin, Constants.driveInputMax);
-    double rightY = MathUtil.clamp(OI.controller.getRightY(), Constants.driveInputMin, Constants.driveInputMax);
+    double leftY = MathUtil.clamp(OI.driveController.getLeftY(), OI.driveInputMin, OI.driveInputMax);
+    double rightY = MathUtil.clamp(OI.driveController.getRightY(), OI.driveInputMin, OI.driveInputMax);
     m_drive.tankDrive(leftY, rightY);
   }
 

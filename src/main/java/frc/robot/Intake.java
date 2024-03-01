@@ -29,16 +29,16 @@ public class Intake extends SubsystemBase {
             () -> {
                 SmartDashboard.putBoolean("Intake command", true);
                 // if(isStoring()){
-                //     OI.opController.getHID().setRumble(OI.rumbleType, OI.rumble);
+                //     OI.opController.getHID().setRumble(RumbleType.kBothRumble, OI.rumble);
                 // }
                 // else {
-                //     OI.opController.getHID().setRumble(OI.rumbleType, 0);
+                //     OI.opController.getHID().setRumble(RumbleType.kBothRumble, 0);
                 // } 
                 // System.out.println("running intake");
                 set(speed);
             },
             () -> {
-                // OI.opController.getHID().setRumble(OI.rumbleType, 0);
+                // OI.opController.getHID().setRumble(RumbleType.kBothRumble, 0);
                 set(0);
             }
         );

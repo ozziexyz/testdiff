@@ -7,9 +7,8 @@ package frc.robot;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.OI;
 
 public class Robot extends TimedRobot {
@@ -17,23 +16,29 @@ public class Robot extends TimedRobot {
   private Pivot m_pivot = new Pivot();
   private Intake m_intake = new Intake();
   private Shooter m_shooter = new Shooter();
+  private double driveInputLimit = OI.defaultDriveInputLimit;
+  private Autos m_autos = new Autos(m_drive, m_shooter, m_pivot, m_intake);
 
-  private Command m_auto = new RunCommand(
-    () -> m_drive.tankDrive(-OI.driveInputMax, -OI.driveInputMax)
-  ).withTimeout(2);
-  
   public void configureButtonBindings() {
     SmartDashboard.putBoolean("Button bindings", true);
 
     OI.opController.leftTrigger(0.3).whileTrue(m_pivot.rotateCommand(Constants.pivotSpeed));
     OI.opController.rightTrigger(0.3).whileTrue(m_pivot.rotateCommand(-Constants.pivotSpeed));
 
-
     OI.opController.leftBumper().whileTrue(m_shooter.runCommand(Constants.shooterSpeed));
 
     OI.opController.rightBumper().whileTrue(m_intake.runCommand(Constants.intakeSpeed));
 
     OI.opController.a().whileTrue(m_intake.runCommand(-Constants.intakeSpeed));
+
+    OI.driveController.leftBumper().whileTrue(Commands.startEnd(
+      () -> {
+        driveInputLimit = .25;
+      },
+      () -> {
+        driveInputLimit = OI.defaultDriveInputLimit;
+      }
+    ));
   }
 
   @Override
@@ -43,14 +48,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    double leftY = MathUtil.clamp(OI.driveController.getLeftY(), OI.driveInputMin, OI.driveInputMax);
-    double rightY = MathUtil.clamp(OI.driveController.getRightY(), OI.driveInputMin, OI.driveInputMax);
+    double leftY = MathUtil.clamp(OI.driveController.getLeftY(), -driveInputLimit, driveInputLimit);
+    double rightY = MathUtil.clamp(OI.driveController.getRightY(), -driveInputLimit, driveInputLimit);
     m_drive.tankDrive(leftY, rightY);
   }
 
   @Override
   public void autonomousInit() {
-    m_auto.schedule();
+    m_autos.oneNoteMiddle().schedule();
   }
 
   @Override

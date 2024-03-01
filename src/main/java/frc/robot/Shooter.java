@@ -23,7 +23,7 @@ public class Shooter extends SubsystemBase {
         m_rightMotor.burnFlash();
     }
 
-    private void run(double speed) {
+    private void set(double speed) {
         SmartDashboard.putNumber("Shooter speed", speed);
         m_leftMotor.set(speed);
         m_rightMotor.set(speed);
@@ -33,11 +33,17 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putBoolean("Shooter command", true);
         return Commands.startEnd(
             () -> {
-                run(speed);
+                set(speed);
             },
             () -> {
-                run(0);
+                set(0);
             }
+        );
+    }
+
+    public Command setCommand(double speed) {
+        return Commands.runOnce(
+            () -> set(speed)
         );
     }
 }

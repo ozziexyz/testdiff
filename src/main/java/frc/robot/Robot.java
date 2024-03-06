@@ -23,17 +23,21 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Button bindings", true);
 
     OI.opController.leftTrigger(0.3).whileTrue(m_pivot.rotateCommand(Constants.pivotSpeed));
-    OI.opController.rightTrigger(0.3).whileTrue(m_pivot.rotateCommand(-Constants.pivotSpeed));
-
-    OI.opController.leftBumper().whileTrue(m_shooter.runCommand(Constants.shooterSpeed));
+    // OI.opController.rightTrigger(0.3).whileTrue(m_pivot.rotateCommand(-Constants.pivotSpeed));
 
     OI.opController.rightBumper().whileTrue(m_intake.runCommand(Constants.intakeSpeed));
-
     OI.opController.a().whileTrue(m_intake.runCommand(-Constants.intakeSpeed));
+
+    //Intake
+
+    OI.opController.povDown().whileTrue(m_shooter.runCommand(Constants.shooterReverseSpeed));
+
+    //Shoot 
+    OI.opController.leftBumper().whileTrue(m_shooter.runCommand(Constants.shooterSpeed));
 
     OI.driveController.leftBumper().whileTrue(Commands.startEnd(
       () -> {
-        driveInputLimit = .25;
+        driveInputLimit = OI.slowModeInputLimit;
       },
       () -> {
         driveInputLimit = OI.defaultDriveInputLimit;
@@ -42,7 +46,7 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void robotInit() {
+    public void robotInit() {
     configureButtonBindings();
   }
 
@@ -51,11 +55,14 @@ public class Robot extends TimedRobot {
     double leftY = MathUtil.clamp(OI.driveController.getLeftY(), -driveInputLimit, driveInputLimit);
     double rightY = MathUtil.clamp(OI.driveController.getRightY(), -driveInputLimit, driveInputLimit);
     m_drive.tankDrive(leftY, rightY);
+    // doueble speed = OI.driveController.getLeftY();
+    // double rotation = OI.driveController.getRightX();
+    // m_drive.arcadeDrive(speed, rotation);
   }
 
   @Override
   public void autonomousInit() {
-    m_autos.oneNoteMiddle().schedule();
+    m_autos.oneNote().schedule();
   }
 
   @Override

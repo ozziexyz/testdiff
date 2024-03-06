@@ -48,13 +48,16 @@ public class Drive extends SubsystemBase {
         m_drive.tankDrive(leftSpeed, rightSpeed);
     }
 
+    public void arcadeDrive(double xSpeed, double rotation) {
+        SmartDashboard.putNumber("Drive xSpeed", xSpeed);
+        SmartDashboard.putNumber("Drive rotation", xSpeed);
+        m_drive.arcadeDrive(xSpeed, rotation);
+    }
+
     public Command driveCommand(double forwardSpeed, double rotationSpeed) {
-        return Commands.startEnd(
+        return Commands.run(
             () -> {
                 m_drive.arcadeDrive(forwardSpeed, rotationSpeed);
-            },
-            () -> {
-                m_drive.arcadeDrive(0, 0);
             }
         );
     }
